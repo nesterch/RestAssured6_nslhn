@@ -1,3 +1,7 @@
+import Model.Location;
+import Model.Place;
+import Model.User;
+import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -66,6 +70,23 @@ public class _05_PathAndJsonPath {
         // path : class veya tip dönüşümüne imkan veremeyen direk veriyi verir. List<String> gibi
         // jsonPath : class dönüşümüne ve tip dönüşümüne izin vererek , veriyi istediğimiz formatta verir.
 
+    }
+// https://gorest.co.in/public/v1/users  endpointte dönen Sadece Data Kısmını POJO
+    // dönüşümü ile alarak yazdırınız.
+
+    @Test
+    public void getUsersV1(){
+        List<User>dataUsers=
+        given()
+                .when()
+                .get("https://gorest.co.in/public/v1/users ")
+
+                .then()
+                .log().body()
+                .extract().jsonPath().getList("data",User.class);
+
+        for(User u :dataUsers)
+            System.out.println("u="+u);
     }
 
 }
