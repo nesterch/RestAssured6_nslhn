@@ -1,12 +1,12 @@
 package Model;
 
 public class User {
-    private  int id;
-    private String name;
-    private String email;
-    private String gender;
+    public  int id;
+    public String name;
+    public String email;
+    public String gender;
 
-    private String status;
+    public String status;
 
     public int getId() {
         return id;
