@@ -24,7 +24,7 @@ public class _06_GoRestUsersTest {
 //    }
 //
 //    Authorization
-//    Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713
+//    Bearer 7855808b298b71ca4af40039bc33e831f19046ece1a1f05c6ca13fba632b82e6
 //
 //
 //    dönüşte 201
@@ -99,7 +99,7 @@ public class _06_GoRestUsersTest {
 
         userID=
                 given() // giden body, token, contentType
-                        .header("Authorization","Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
+                        .header("Authorization","Bearer 7855808b298b71ca4af40039bc33e831f19046ece1a1f05c6ca13fba632b82e6")
                         .body(newUser) // giden body
                         .contentType(ContentType.JSON)
 
