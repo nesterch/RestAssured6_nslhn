@@ -34,32 +34,32 @@ public class _06_GoRestUsersTest {
 //    dönüşte 201
 //    id extract
 
-    Faker randomUreteci=new Faker();
-    int userID=0;
+    Faker randomUreteci = new Faker();
+    int userID = 0;
     RequestSpecification reqSpec;
 
     @BeforeClass
-    public void setup(){
+    public void setup() {
 
-        baseURI="https://gorest.co.in/public/v2/users";
+        baseURI = "https://gorest.co.in/public/v2/users";
 
         reqSpec = new RequestSpecBuilder()
-                .addHeader("Authorization","Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
+                .addHeader("Authorization", "Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
                 .setContentType(ContentType.JSON)
                 .build();
     }
 
 
     @Test(enabled = false)
-    public void createUserJSon(){
+    public void createUserJSon() {
 
-        String rndFullName= randomUreteci.name().fullName();
-        String rndEmail= randomUreteci.internet().emailAddress();
+        String rndFullName = randomUreteci.name().fullName();
+        String rndEmail = randomUreteci.internet().emailAddress();
 
-        userID=
+        userID =
                 given() // giden body, token, contentType
-                        .header("Authorization","Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
-                        .body("{\"name\":\""+rndFullName+"\", \"gender\":\"male\", \"email\":\""+rndEmail+"\", \"status\":\"active\"}") // giden body
+                        .header("Authorization", "Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
+                        .body("{\"name\":\"" + rndFullName + "\", \"gender\":\"male\", \"email\":\"" + rndEmail + "\", \"status\":\"active\"}") // giden body
                         .contentType(ContentType.JSON)
 
                         .when()
@@ -74,18 +74,18 @@ public class _06_GoRestUsersTest {
     }
 
     @Test
-    public void createUserMAP(){
+    public void createUserMAP() {
 
-        String rndFullName= randomUreteci.name().fullName();
-        String rndEmail= randomUreteci.internet().emailAddress();
+        String rndFullName = randomUreteci.name().fullName();
+        String rndEmail = randomUreteci.internet().emailAddress();
 
-        Map<String,String> newUser=new HashMap<>();
+        Map<String, String> newUser = new HashMap<>();
         newUser.put("name", rndFullName);
-        newUser.put("gender","male");
+        newUser.put("gender", "male");
         newUser.put("email", rndEmail);
         newUser.put("status", "active");
 
-        userID=
+        userID =
                 given() // giden body, token, contentType
                         .spec(reqSpec)
                         .body(newUser) // giden body
@@ -103,20 +103,20 @@ public class _06_GoRestUsersTest {
     }
 
     @Test(enabled = false)
-    public void createUserClass(){
+    public void createUserClass() {
 
-        String rndFullName= randomUreteci.name().fullName();
-        String rndEmail= randomUreteci.internet().emailAddress();
+        String rndFullName = randomUreteci.name().fullName();
+        String rndEmail = randomUreteci.internet().emailAddress();
 
-        User newUser=new User();
-        newUser.name=rndFullName;
-        newUser.email=rndEmail;
-        newUser.gender="male";
-        newUser.status="active";
+        User newUser = new User();
+        newUser.name = rndFullName;
+        newUser.email = rndEmail;
+        newUser.gender = "male";
+        newUser.status = "active";
 
-        userID=
+        userID =
                 given() // giden body, token, contentType
-                        .header("Authorization","Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
+                        .header("Authorization", "Bearer 787c83039875452ce6a32a7b73e7a10c1d4443273522652da0f13d5e76a27713")
                         .body(newUser) // giden body
                         .contentType(ContentType.JSON)
 
@@ -133,13 +133,13 @@ public class _06_GoRestUsersTest {
 
 
     @Test(dependsOnMethods = "createUserMAP")
-    public void getUserById(){
+    public void getUserById() {
 
         given()
                 .spec(reqSpec)
 
                 .when()
-                .get(""+userID)
+                .get("" + userID)
 
                 .then()
                 .log().body()
@@ -149,12 +149,55 @@ public class _06_GoRestUsersTest {
         ;
     }
 
+    @Test(dependsOnMethods = "getUserById")
+    public void updateUser() {
+        Map<String, String> updateUser = new HashMap<>();
+        updateUser.put("name", "ismet temur");
 
+        given()
+                .spec(reqSpec)
+                .body(updateUser)
 
+                .when()
+                .put(""+userID)
 
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("id", equalTo(userID))
+                .body("name", equalTo("ismet temur"))
+        ;
+    }
 
+    // user delete API testini yapınız
+    @Test(dependsOnMethods = "updateUser")
+    public void deleteUser(){
 
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete(""+userID)
 
+                .then()
+                //.log().all()
+                .statusCode(204)
+        ;
+    }
+
+    // user delete negatif API testini yapınız
+    @Test(dependsOnMethods = "deleteUser")
+    public void deleteUserNegative(){
+
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete(""+userID)
+
+                .then()
+                //.log().all()
+                .statusCode(404)
+        ;
+    }
 
 
 
